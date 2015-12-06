@@ -9,7 +9,7 @@
     :copyright: 12.2015 by Markus Ullmann, mail@markus-ullmann.de
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 #
 # constants
@@ -20,17 +20,16 @@ CLEAR_STRING = ""  # used to speed up processing in pypy, has no functional mean
 from datetime import datetime
 import csv
 import sys
-import StringIO
-import cStringIO
 
 #
 # environment imports
 import openpyxl
+from six import next as six_next
 import xlrd
 
 #
 # local imports
-import ._csv_from_pypy as _csv
+import tablereader._csv_from_pypy as _csv
 
 
 class XLReader(object):
@@ -48,6 +47,9 @@ class XLReader(object):
 
     def __iter__(self):
         return self
+
+    def __next__(self):
+        return self.next()
 
     def next(self):
         try:
@@ -89,6 +91,9 @@ class XLSXReader(object):
     def __iter__(self):
         return self
 
+    def __next__(self):
+        return self.next()
+
     def next(self):
         items = self.stringified_row()
         self.line_num += 1
@@ -127,6 +132,9 @@ class CSVStrippingReader(object):
 
     def __iter__(self):
         return self
+
+    def __next__(self):
+        return self.next()
 
     def next(self):
         row = self.reader.next()
@@ -183,18 +191,21 @@ class TableReader(object):
     def __iter__(self):
         return self
 
+    def __next__(self):
+        return self.next()
+
     def next(self):
         # Strip whitespace here if the reader was not able to do it by itself already (only CSV is capable of doing it currently)
         if self.manually_strip_whitespaces:
             newrow = {}
-            for k, v in self.reader.next().iteritems():
+            for k, v in six_next(self.reader).iteritems():
                 if isinstance(v, basestring):
                     newrow[k] = v.strip()
                 else:
                     newrow[k] = v
             return newrow
         else:
-            return self.reader.next()
+            return six_next(self.reader)
 
     @property
     def line_num(self):
