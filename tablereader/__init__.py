@@ -144,7 +144,7 @@ class CSVStrippingReader(object):
 class TableReader(object):
     """Consolidated interface for reading csv, xls and xlsx"""
 
-    def __init__(self, filename, sheet=None, fieldnames=None, strip_whitespaces=False, force_type=None, delimiter=";"):
+    def __init__(self, filename, sheet=None, fieldnames=None, strip_whitespaces=False, force_type=None, delimiter=";", quotechar='"'):
         """Optional parameter description:
 
         :sheet: Sheet to use if document has sheet support, otherwise defaults to first one
@@ -168,14 +168,14 @@ class TableReader(object):
             filehandle = filename
         else:
             filehandle = open(filename)
-        self.reader = csv.DictReader(filehandle, delimiter=delimiter, fieldnames=fieldnames)
+        self.reader = csv.DictReader(filehandle, delimiter=delimiter, quotechar=quotechar, fieldnames=fieldnames)
         if force_type == "csv" or (force_type is None and filename.endswith(".csv")):
             # if it is plain csv, no action to take for us
             if strip_whitespaces:
                 self.reader.reader = CSVStrippingReader(self.reader.reader)
                 self.manually_strip_whitespaces = False
         elif force_type == "unicodecsv":
-            self.reader.reader = _csv.reader(filehandle)
+            self.reader.reader = _csv.reader(filehandle, delimiter=delimiter, quotechar=quotechar)
             if strip_whitespaces:
                 self.reader.reader = CSVStrippingReader(self.reader.reader)
                 self.manually_strip_whitespaces = False
