@@ -9,7 +9,7 @@
     :copyright: 12.2015 by Markus Ullmann, mail@markus-ullmann.de
 """
 
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 #
 # constants

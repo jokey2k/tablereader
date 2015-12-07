@@ -1,3 +1,9 @@
+Version 1.0.2
+-------------
+
+- Pass delimiter and quotechar to unicode reader for customization
+- Make _csv module Py 3.4 compatible
+
 Version 1.0.1
 -------------
 
