@@ -164,8 +164,8 @@ class TableReader(object):
 
         self.strip_whitespaces = strip_whitespaces
         self.manually_strip_whitespaces = strip_whitespaces
-        is_stringio = "StringI" in filename.__class__.__name__
-        if is_stringio and force_type is None:
+        self.is_stringio = "StringI" in filename.__class__.__name__
+        if self.is_stringio and force_type is None:
                 raise ValueError("StringIO given but no forced type, I cannot guess!")
         if self.is_stringio:
             self.filehandle = filename
