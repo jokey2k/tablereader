@@ -167,18 +167,18 @@ class TableReader(object):
         is_stringio = "StringI" in filename.__class__.__name__
         if is_stringio and force_type is None:
                 raise ValueError("StringIO given but no forced type, I cannot guess!")
-        if is_stringio:
-            filehandle = filename
+        if self.is_stringio:
+            self.filehandle = filename
         else:
-            filehandle = open(filename)
-        self.reader = csv.DictReader(filehandle, delimiter=delimiter, quotechar=quotechar, fieldnames=fieldnames)
+            self.filehandle = open(filename)
+        self.reader = csv.DictReader(self.filehandle, delimiter=delimiter, quotechar=quotechar, fieldnames=fieldnames)
         if force_type == "csv" or (force_type is None and filename.endswith(".csv")):
             # if it is plain csv, no action to take for us
             if strip_whitespaces:
                 self.reader.reader = CSVStrippingReader(self.reader.reader)
                 self.manually_strip_whitespaces = False
         elif force_type == "unicodecsv":
-            self.reader.reader = _csv.reader(filehandle, delimiter=delimiter, quotechar=quotechar)
+            self.reader.reader = _csv.reader(self.filehandle, delimiter=delimiter, quotechar=quotechar)
             if strip_whitespaces:
                 self.reader.reader = CSVStrippingReader(self.reader.reader)
                 self.manually_strip_whitespaces = False
@@ -228,6 +228,10 @@ class TableReader(object):
             return reader.get_sheet_names()
         else:
             raise NotImplementedError("Unsupported file format")
+
+    def close(self):
+        if not self.is_stringio:
+            self.filehandle.close()
 
 
 class OffsetTableReader(TableReader):
