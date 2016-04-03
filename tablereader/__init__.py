@@ -233,8 +233,8 @@ class TableReader(object):
 class OffsetTableReader(TableReader):
     """Tablereader able to treat a row with a special value as header row. Just give search string as second parameter"""
 
-    def __init__(self, filename, header_start_content, sheet=None, fieldnames=[], strip_whitespaces=False):
-        super(OffsetTableReader, self).__init__(filename=filename, sheet=sheet, fieldnames=fieldnames, strip_whitespaces=strip_whitespaces)
+    def __init__(self, filename, header_start_content, sheet=None, fieldnames=[], strip_whitespaces=False, force_type=None):
+        super(OffsetTableReader, self).__init__(filename=filename, sheet=sheet, fieldnames=fieldnames, strip_whitespaces=strip_whitespaces, force_type=force_type)
 
         def iter_columns():
             for row in self.reader.reader:
