@@ -24,7 +24,7 @@ import sys
 #
 # environment imports
 import openpyxl
-from six import next as six_next
+from six import next as six_next, u as six_u
 import xlrd
 
 #
@@ -69,8 +69,8 @@ class XLReader(object):
         newrow = []
         for element in row:
             if isinstance(element, float):
-                element = str(int(element))
-            newrow.append(unicode(element))
+                element = str(element)
+            newrow.append(six_u(element))
         return newrow
 
 
@@ -105,7 +105,7 @@ class XLSXReader(object):
     def stringified_row(self):
         """Ensure row contents are all strings"""
 
-        row = self._iter.next()
+        row = six_next(self._iter)
         newrow = []
         for element in row:
             if element.internal_value is not None:
