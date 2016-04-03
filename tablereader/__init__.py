@@ -40,9 +40,12 @@ class XLReader(object):
         self.filename = filename
         self.sheetname = sheetname
         self._reader = xlrd.open_workbook(filename)
+        self.sheetnames = self._reader.sheet_names()
         if sheetname is None:
             self._sheet = self._reader.sheet_by_index(0)
         else:
+            if sheetname not in self.sheetnames:
+                raise ValueError("No such sheet %s" % sheetname)
             self._sheet = self._reader.sheet_by_name(sheetname)
 
     def __iter__(self):
@@ -79,9 +82,9 @@ class XLSXReader(object):
         self.filename = filename
         self.sheetname = sheetname
         self._reader = openpyxl.load_workbook(filename, use_iterators=True)
+        self.sheetnames = self._reader.get_sheet_names()
         if sheetname is None:
-            sheetnames = self._reader.get_sheet_names()
-            self._sheet = self._reader.get_sheet_by_name(sheetnames[0])
+            self._sheet = self._reader.get_sheet_by_name(self.sheetnames[0])
         else:
             self._sheet = self._reader.get_sheet_by_name(sheetname)
             if self._sheet is None:
