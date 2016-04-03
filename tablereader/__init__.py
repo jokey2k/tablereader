@@ -108,13 +108,13 @@ class XLSXReader(object):
         row = six_next(self._iter)
         newrow = []
         for element in row:
-            if element.internal_value is not None:
-                if isinstance(element.internal_value, datetime.datetime):
-                    element = str(element.internal_value)
+            if element.value is not None:
+                if isinstance(element.value, datetime):
+                    element = str(element.value)
                 elif element.data_type is openpyxl.cell.Cell.TYPE_NUMERIC:
-                    element = str(int(element.internal_value))
+                    element = str(element.value)
                 else:
-                    element = element.internal_value
+                    element = element.value
             else:
                 element = CLEAR_STRING
             newrow.append(element)
