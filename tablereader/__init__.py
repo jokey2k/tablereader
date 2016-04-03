@@ -9,12 +9,6 @@
     :copyright: 12.2015 by Markus Ullmann, mail@markus-ullmann.de
 """
 
-__version__ = "1.0.2"
-
-#
-# constants
-CLEAR_STRING = ""  # used to speed up processing in pypy, has no functional meaning
-
 #
 # Python imports
 from datetime import datetime
@@ -30,6 +24,12 @@ import xlrd
 #
 # local imports
 import tablereader._csv_from_pypy as _csv
+
+#
+# constants
+CLEAR_STRING = ""  # used to speed up processing in pypy, has no functional meaning
+
+__version__ = "1.0.3"
 
 
 class XLReader(object):
