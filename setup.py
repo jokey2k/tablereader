@@ -1,5 +1,6 @@
 from setuptools import setup
 
+
 def readme():
     with open('README.md') as f:
         return f.read()
@@ -15,9 +16,9 @@ setup(
     keywords=["encoding", "csv", "xlsx", "xls", "unicode"],
     license='BSD-3',
     install_requires=[
-       'six',
-       'xlrd'
         'openpyxl>=2.3.4',
+        'six',
+        'xlrd'
     ],
     platform="any",
     zip_safe=False,
