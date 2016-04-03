@@ -1,3 +1,9 @@
+Version 1.0.3
+-------------
+- An older version sneaked in that did not use six module properly, fixed now
+- Provide force_type to OffsetTableReader
+- Option to explicitely close filehandles by calling close()
+
 Version 1.0.2
 -------------
 
