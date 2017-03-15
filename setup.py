@@ -8,7 +8,7 @@ def readme():
 setup(
     name="tablereader",
     packages=["tablereader"],
-    version="1.0.3",
+    version="1.1.0",
     description="Unified abstraction for handling xls, xlsx and CSV files in Python",
     author="Markus Ullmann",
     author_email="mail@markus-ullmann.de",
@@ -16,7 +16,7 @@ setup(
     keywords=["encoding", "csv", "xlsx", "xls", "unicode"],
     license='BSD-3',
     install_requires=[
-        'openpyxl>=2.3.4',
+        'openpyxl>=2.4.0',
         'six',
         'xlrd'
     ],
