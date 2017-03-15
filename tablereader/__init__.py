@@ -81,7 +81,7 @@ class XLSXReader(object):
         self.line_num = 0
         self.filename = filename
         self.sheetname = sheetname
-        self._reader = openpyxl.load_workbook(filename, use_iterators=True)
+        self._reader = openpyxl.load_workbook(filename, read_only=True)
         self.sheetnames = self._reader.get_sheet_names()
         if sheetname is None:
             self._sheet = self._reader.get_sheet_by_name(self.sheetnames[0])
@@ -224,7 +224,7 @@ class TableReader(object):
             reader = xlrd.open_workbook(filename)
             return reader.sheet_names()
         elif filename.endswith(".xlsx"):
-            reader = openpyxl.load_workbook(filename, use_iterators=True)
+            reader = openpyxl.load_workbook(filename, read_only=True)
             return reader.get_sheet_names()
         else:
             raise NotImplementedError("Unsupported file format")
