@@ -70,7 +70,7 @@ class XLReader(object):
         for element in row:
             if isinstance(element, float):
                 element = str(element)
-            newrow.append(six_u(element))
+            newrow.append(six_u(element) if not isinstance(element, unicode) else element)
         return newrow
 
 
