@@ -1,6 +1,8 @@
 Version 1.1.0
 -------------
 
+- Bump and fix for OpenPyXL 2.4 API changes
+
 Version 1.0.3
 -------------
 - An older version sneaked in that did not use six module properly, fixed now
