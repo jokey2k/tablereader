@@ -13,12 +13,11 @@
 # Python imports
 from datetime import datetime
 import csv
-import sys
 
 #
 # environment imports
 import openpyxl
-from six import next as six_next, u as six_u
+from six import next as six_next, PY2, string_types as six_string_types
 import xlrd
 
 #
@@ -32,7 +31,7 @@ CLEAR_STRING = ""  # used to speed up processing in pypy, has no functional mean
 __version__ = "1.1.0"
 
 
-class XLReader(object):
+class BaseXLReader(object):
     """Mimic _csv.reader interface for DictReader to be able to handle an xls sheet"""
 
     def __init__(self, filename, sheetname=None):
@@ -62,6 +61,9 @@ class XLReader(object):
         self.line_num += 1
         return items
 
+
+class XLReaderPy2(BaseXLReader):
+
     def stringified_row(self):
         """Ensure row contents are all strings"""
 
@@ -70,8 +72,28 @@ class XLReader(object):
         for element in row:
             if isinstance(element, float):
                 element = str(element)
-            newrow.append(six_u(element) if not isinstance(element, unicode) else element)
+            newrow.append(unicode(element) if not isinstance(element, unicode) else element)
         return newrow
+
+
+class XLReaderPy3(BaseXLReader):
+
+    def stringified_row(self):
+        """Ensure row contents are all strings"""
+
+        row = self._sheet.row_values(self.line_num)
+        newrow = []
+        for element in row:
+            if isinstance(element, float):
+                element = str(element)
+            newrow.append(element)
+        return newrow
+
+
+if PY2:
+    XLReader = XLReaderPy2
+else:
+    XLReader = XLReaderPy3
 
 
 class XLSXReader(object):
@@ -209,7 +231,7 @@ class TableReader(object):
         if self.manually_strip_whitespaces:
             newrow = {}
             for k, v in six_next(self.reader).iteritems():
-                if isinstance(v, basestring):
+                if isinstance(v, six_string_types):
                     newrow[k] = v.strip()
                 else:
                     newrow[k] = v
