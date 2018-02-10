@@ -200,6 +200,10 @@ class TableReader(object):
     def __next__(self):
         return self.next()
 
+    def __del__(self):
+        if not self.is_stringio:
+            self.filehandle.close()
+
     def next(self):
         # Strip whitespace here if the reader was not able to do it by itself already (only CSV is capable of doing it currently)
         if self.manually_strip_whitespaces:
