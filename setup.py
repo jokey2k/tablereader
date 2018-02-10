@@ -12,8 +12,8 @@ setup(
     description="Unified abstraction for handling xls, xlsx and CSV files in Python",
     author="Markus Ullmann",
     author_email="mail@markus-ullmann.de",
-    url="http://github.com/jokey2k/tablereader",
     keywords=["encoding", "csv", "xlsx", "xls", "unicode"],
+    url="https://github.com/jokey2k/tablereader",
     license='BSD-3',
     install_requires=[
         'openpyxl=2.5.0',
