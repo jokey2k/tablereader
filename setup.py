@@ -1,24 +1,25 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 def readme():
     with open('README.md') as f:
         return f.read()
 
+
 setup(
     name="tablereader",
-    packages=find_packages("tablereader", exclude=["tests"]),
+    packages=find_packages(".", exclude=["tablereader.tests"]),
     version="1.1.0",
     description="Unified abstraction for handling xls, xlsx and CSV files in Python",
     author="Markus Ullmann",
     author_email="mail@markus-ullmann.de",
-    keywords=["encoding", "csv", "xlsx", "xls", "unicode"],
     url="https://github.com/jokey2k/tablereader",
+    keywords=["encoding", "csv", "xlsx", "xls", "xlsm", "unicode"],
     license='BSD-3',
     install_requires=[
-        'openpyxl=2.5.0',
-        'six=1.11.0',
-        'xlrd=1.1.0'
+        'openpyxl==2.5.0',
+        'six==1.11.0',
+        'xlrd==1.1.0'
     ],
     platform="any",
     zip_safe=False,
@@ -33,9 +34,9 @@ setup(
         "Intended Audience :: System Administrators",
         "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
-        "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: Internet :: Log Analysis",
