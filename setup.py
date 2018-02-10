@@ -7,7 +7,7 @@ def readme():
 
 setup(
     name="tablereader",
-    packages=["tablereader"],
+    packages=find_packages("tablereader", exclude=["tests"]),
     version="1.1.0",
     description="Unified abstraction for handling xls, xlsx and CSV files in Python",
     author="Markus Ullmann",
