@@ -185,7 +185,10 @@ class TableReader(object):
         elif force_type == "xls" or (force_type is None and filename.endswith(".xls")):
             # Monkey patch reader to use XLS mimic sheet reader instead
             self.reader.reader = XLReader(filename, sheet)
-        elif force_type == "xlsx" or (force_type is None and (filename.endswith(".xlsx") or filename.endswith(".xlsm"))):
+        elif force_type == "xlsx" or (force_type is None and (filename.endswith(".xlsx") or
+                                                              filename.endswith(".xlsm") or
+                                                              filename.endswith(".xltx") or
+                                                              filename.endswith(".xltm"))):
             # Monkey patch reader to use XLSX mimic sheet reader instead
             self.reader.reader = XLSXReader(filename, sheet)
         else:
@@ -223,7 +226,10 @@ class TableReader(object):
         if filename.endswith(".xls"):
             reader = xlrd.open_workbook(filename)
             return reader.sheet_names()
-        elif filename.endswith(".xlsx"):
+        elif (filename.endswith(".xlsx") or
+              filename.endswith(".xlsm") or
+              filename.endswith(".xltx") or
+              filename.endswith(".xltm")):
             reader = openpyxl.load_workbook(filename, read_only=True)
             return reader.get_sheet_names()
         else:
