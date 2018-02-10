@@ -16,9 +16,9 @@ setup(
     keywords=["encoding", "csv", "xlsx", "xls", "unicode"],
     license='BSD-3',
     install_requires=[
-        'six',
-        'xlrd'
         'openpyxl=2.5.0',
+        'six=1.11.0',
+        'xlrd=1.1.0'
     ],
     platform="any",
     zip_safe=False,
