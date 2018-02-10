@@ -1,5 +1,15 @@
+Version 1.1.0
+-------------
+
+- Bump and fix for OpenPyXL 2.4 API changes
+- Add more supported XML file formats
+- Introduce some basic unittests
+- Cleanup file handle on object destruction
+- restore python 2.7 compatibility
+
 Version 1.0.3
 -------------
+
 - An older version sneaked in that did not use six module properly, fixed now
 - Provide force_type to OffsetTableReader
 - Option to explicitely close filehandles by calling close()

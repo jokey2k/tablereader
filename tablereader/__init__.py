@@ -13,12 +13,11 @@
 # Python imports
 from datetime import datetime
 import csv
-import sys
 
 #
 # environment imports
 import openpyxl
-from six import next as six_next, u as six_u
+from six import next as six_next, PY2, string_types as six_string_types
 import xlrd
 
 #
@@ -29,10 +28,10 @@ import tablereader._csv_from_pypy as _csv
 # constants
 CLEAR_STRING = ""  # used to speed up processing in pypy, has no functional meaning
 
-__version__ = "1.0.3"
+__version__ = "1.1.0"
 
 
-class XLReader(object):
+class BaseXLReader(object):
     """Mimic _csv.reader interface for DictReader to be able to handle an xls sheet"""
 
     def __init__(self, filename, sheetname=None):
@@ -62,6 +61,9 @@ class XLReader(object):
         self.line_num += 1
         return items
 
+
+class XLReaderPy2(BaseXLReader):
+
     def stringified_row(self):
         """Ensure row contents are all strings"""
 
@@ -70,8 +72,28 @@ class XLReader(object):
         for element in row:
             if isinstance(element, float):
                 element = str(element)
-            newrow.append(six_u(element))
+            newrow.append(unicode(element) if not isinstance(element, unicode) else element)
         return newrow
+
+
+class XLReaderPy3(BaseXLReader):
+
+    def stringified_row(self):
+        """Ensure row contents are all strings"""
+
+        row = self._sheet.row_values(self.line_num)
+        newrow = []
+        for element in row:
+            if isinstance(element, float):
+                element = str(element)
+            newrow.append(element)
+        return newrow
+
+
+if PY2:
+    XLReader = XLReaderPy2
+else:
+    XLReader = XLReaderPy3
 
 
 class XLSXReader(object):
@@ -82,9 +104,9 @@ class XLSXReader(object):
         self.filename = filename
         self.sheetname = sheetname
         self._reader = openpyxl.load_workbook(filename, read_only=True)
-        self.sheetnames = self._reader.get_sheet_names()
+        self.sheetnames = self._reader.sheetnames
         if sheetname is None:
-            self._sheet = self._reader.get_sheet_by_name(self.sheetnames[0])
+            self._sheet = self._reader[self.sheetnames[0]]
         else:
             self._sheet = self._reader.get_sheet_by_name(sheetname)
             if self._sheet is None:
@@ -185,7 +207,10 @@ class TableReader(object):
         elif force_type == "xls" or (force_type is None and filename.endswith(".xls")):
             # Monkey patch reader to use XLS mimic sheet reader instead
             self.reader.reader = XLReader(filename, sheet)
-        elif force_type == "xlsx" or (force_type is None and (filename.endswith(".xlsx") or filename.endswith(".xlsm"))):
+        elif force_type == "xlsx" or (force_type is None and (filename.endswith(".xlsx") or
+                                                              filename.endswith(".xlsm") or
+                                                              filename.endswith(".xltx") or
+                                                              filename.endswith(".xltm"))):
             # Monkey patch reader to use XLSX mimic sheet reader instead
             self.reader.reader = XLSXReader(filename, sheet)
         else:
@@ -197,12 +222,16 @@ class TableReader(object):
     def __next__(self):
         return self.next()
 
+    def __del__(self):
+        if not self.is_stringio:
+            self.filehandle.close()
+
     def next(self):
         # Strip whitespace here if the reader was not able to do it by itself already (only CSV is capable of doing it currently)
         if self.manually_strip_whitespaces:
             newrow = {}
             for k, v in six_next(self.reader).iteritems():
-                if isinstance(v, basestring):
+                if isinstance(v, six_string_types):
                     newrow[k] = v.strip()
                 else:
                     newrow[k] = v
@@ -223,7 +252,10 @@ class TableReader(object):
         if filename.endswith(".xls"):
             reader = xlrd.open_workbook(filename)
             return reader.sheet_names()
-        elif filename.endswith(".xlsx"):
+        elif (filename.endswith(".xlsx") or
+              filename.endswith(".xlsm") or
+              filename.endswith(".xltx") or
+              filename.endswith(".xltm")):
             reader = openpyxl.load_workbook(filename, read_only=True)
             return reader.get_sheet_names()
         else:
