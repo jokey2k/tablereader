@@ -1,3 +1,5 @@
+Version 1.1.1
+-------------
 - Bump openpyxl to 3.0.2, adapt a call to cell type for stringification
 - Bump xlrd to xlrd2 1.3.4 to be sane with recent python versions
 

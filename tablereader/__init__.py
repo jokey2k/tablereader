@@ -29,7 +29,7 @@ import tablereader._csv_from_pypy as _csv
 # constants
 CLEAR_STRING = ""  # used to speed up processing in pypy, has no functional meaning
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 
 class BaseXLReader(object):
