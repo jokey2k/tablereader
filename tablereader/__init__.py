@@ -17,8 +17,9 @@ import csv
 #
 # environment imports
 import openpyxl
+import openpyxl.cell.cell
 from six import next as six_next, PY2, string_types as six_string_types
-import xlrd
+import xlrd2
 
 #
 # local imports
@@ -38,7 +39,7 @@ class BaseXLReader(object):
         self.line_num = 0
         self.filename = filename
         self.sheetname = sheetname
-        self._reader = xlrd.open_workbook(filename)
+        self._reader = xlrd2.open_workbook(filename)
         self.sheetnames = self._reader.sheet_names()
         if sheetname is None:
             self._sheet = self._reader.sheet_by_index(0)
@@ -133,7 +134,7 @@ class XLSXReader(object):
             if element.value is not None:
                 if isinstance(element.value, datetime):
                     element = str(element.value)
-                elif element.data_type is openpyxl.cell.Cell.TYPE_NUMERIC:
+                elif element.data_type is openpyxl.cell.cell.TYPE_NUMERIC:
                     element = str(element.value)
                 else:
                     element = element.value
@@ -250,7 +251,7 @@ class TableReader(object):
     @staticmethod
     def get_sheet_names(filename):
         if filename.endswith(".xls"):
-            reader = xlrd.open_workbook(filename)
+            reader = xlrd2.open_workbook(filename)
             return reader.sheet_names()
         elif (filename.endswith(".xlsx") or
               filename.endswith(".xlsm") or
